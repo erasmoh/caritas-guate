@@ -100,7 +100,7 @@ export default async function MuroPage({ searchParams }: MuroPageProps) {
         </h1>
         <div className="shrink-0 border-4 border-[#34a853] bg-white p-2 shadow-[0_18px_55px_rgba(60,64,67,0.22)] sm:p-3">
           <Image
-            src="/qr-guatemala.png"
+            src="/qr-guate-caritas.png"
             alt="QR para generar tu imagen de Build with AI Guatemala"
             width={144}
             height={144}

@@ -30,6 +30,7 @@ create index if not exists wall_images_updated_at_idx
 create or replace function public.set_wall_images_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = now();
@@ -67,13 +68,6 @@ create policy "wall_images: anon insert"
   on public.wall_images
   for insert
   with check (true);
-
--- Storage policies for the wall-images bucket.
-drop policy if exists "wall-images: public read" on storage.objects;
-create policy "wall-images: public read"
-  on storage.objects
-  for select
-  using (bucket_id = 'wall-images');
 
 drop policy if exists "wall-images: anon upload" on storage.objects;
 create policy "wall-images: anon upload"
