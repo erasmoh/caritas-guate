@@ -27,6 +27,7 @@ const PIXEL_FONT: Record<string, string[]> = {
   "-": ["00000", "00000", "00000", "11111", "00000", "00000", "00000"],
   " ": ["000", "000", "000", "000", "000", "000", "000"],
   "0": ["01110", "10001", "10011", "10101", "11001", "10001", "01110"],
+  "1": ["00100", "01100", "00100", "00100", "00100", "00100", "01110"],
   "2": ["01110", "10001", "00001", "00010", "00100", "01000", "11111"],
   "3": ["11110", "00001", "00001", "01110", "00001", "00001", "11110"],
   "6": ["00110", "01000", "10000", "11110", "10001", "10001", "01110"],
@@ -963,8 +964,8 @@ export default function PhotoCardStudio() {
   return (
     <main className="relative flex min-h-dvh flex-col overflow-hidden bg-[#f8fafd] text-[#202124]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(66,133,244,0.22),transparent_30%),radial-gradient(circle_at_88%_18%,rgba(234,67,53,0.16),transparent_26%),radial-gradient(circle_at_76%_86%,rgba(251,188,4,0.26),transparent_30%),radial-gradient(circle_at_12%_78%,rgba(52,168,83,0.16),transparent_28%)]" />
-      <section className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-5 py-6 sm:px-8 lg:grid lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:py-10">
-        <div className="flex flex-col gap-5">
+      <section className="relative z-10 mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 gap-5 px-5 py-6 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:grid-rows-[auto_auto] lg:items-center lg:gap-8 lg:py-10">
+        <div className="flex flex-col gap-5 lg:col-start-1 lg:row-start-1">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#4285f4]/25 bg-white/85 px-4 py-2 text-sm font-bold uppercase tracking-[0.24em] text-[#4285f4] shadow-[0_16px_45px_rgba(60,64,67,0.12)]">
             {EVENT_NAME}
           </div>
@@ -988,63 +989,9 @@ export default function PhotoCardStudio() {
           >
             {status.text}
           </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={startCamera}
-                className="rounded-xl bg-[#4285f4] px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-white shadow-[0_14px_30px_rgba(66,133,244,0.30)] transition hover:scale-[1.01] hover:bg-[#3367d6]"
-              >
-                {cameraReady ? "Reactivar cámara" : "Activar cámara"}
-              </button>
-              <button
-                type="button"
-                onClick={captureCard}
-                disabled={!cameraReady || !canGenerate}
-                className="rounded-xl border-2 border-[#34a853] bg-white/75 px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[#137333] transition hover:scale-[1.01] hover:bg-[#34a853] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100 disabled:hover:bg-white/75 disabled:hover:text-[#137333]"
-              >
-                {isGenerating
-                  ? "Generando..."
-                  : cooldownRemainingSeconds > 0
-                    ? `${cooldownRemainingSeconds}s`
-                    : capturedImage
-                      ? "Nueva captura"
-                      : "Capturar"}
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={downloadCard}
-                disabled={!capturedImage}
-                className="rounded-lg border border-[#ea4335] bg-white/70 px-3 py-2.5 text-xs font-black uppercase tracking-[0.12em] text-[#c5221f] transition hover:bg-[#ea4335] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/70 disabled:hover:text-[#c5221f]"
-              >
-                Descargar
-              </button>
-              <button
-                type="button"
-                onClick={openShareDialog}
-                disabled={!capturedImage || isSharing}
-                className="rounded-lg border border-[#fbbc04] bg-white/70 px-3 py-2.5 text-xs font-black uppercase tracking-[0.12em] text-[#5f4500] transition hover:bg-[#fbbc04] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/70"
-              >
-                {isSharing ? "Enviando..." : "Enviar al muro"}
-              </button>
-            </div>
-            {cooldownRemainingSeconds > 0 && (
-              <p className="text-xs font-medium text-[#5f6368]">
-                Límite activo: podrás generar otra imagen en {cooldownRemainingSeconds}s.
-              </p>
-            )}
-            {cameraReady && (
-              <p className="text-xs font-medium text-[#5f6368]">
-                La cámara se apaga tras 2 minutos sin actividad o al dejar la página en segundo plano.
-              </p>
-            )}
-          </div>
         </div>
 
-        <div className="mx-auto w-full max-w-[430px] lg:max-w-[460px]">
+        <div className="mx-auto w-full max-w-[430px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-[460px]">
           <div className="rounded-[2rem] border border-[#dadce0] bg-white/85 p-3 shadow-[0_26px_80px_rgba(60,64,67,0.18)]">
             <div className="relative aspect-[2/3] overflow-hidden rounded-[1.55rem] border-[10px] border-[#4285f4] bg-black font-mono shadow-[inset_0_0_0_5px_#34a853]">
               <video
@@ -1106,6 +1053,60 @@ export default function PhotoCardStudio() {
               {capturedImage ? "Resultado final" : isGenerating ? "Generando" : "Cámara frontal"}
             </p>
           </div>
+        </div>
+
+        <div className="flex flex-col gap-3 lg:col-start-1 lg:row-start-2">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={startCamera}
+              className="rounded-xl bg-[#4285f4] px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-white shadow-[0_14px_30px_rgba(66,133,244,0.30)] transition hover:scale-[1.01] hover:bg-[#3367d6]"
+            >
+              {cameraReady ? "Reactivar cámara" : "Activar cámara"}
+            </button>
+            <button
+              type="button"
+              onClick={captureCard}
+              disabled={!cameraReady || !canGenerate}
+              className="rounded-xl border-2 border-[#34a853] bg-white/75 px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[#137333] transition hover:scale-[1.01] hover:bg-[#34a853] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100 disabled:hover:bg-white/75 disabled:hover:text-[#137333]"
+            >
+              {isGenerating
+                ? "Generando..."
+                : cooldownRemainingSeconds > 0
+                  ? `${cooldownRemainingSeconds}s`
+                  : capturedImage
+                    ? "Nueva captura"
+                    : "Capturar"}
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={downloadCard}
+              disabled={!capturedImage}
+              className="rounded-lg border border-[#ea4335] bg-white/70 px-3 py-2.5 text-xs font-black uppercase tracking-[0.12em] text-[#c5221f] transition hover:bg-[#ea4335] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/70 disabled:hover:text-[#c5221f]"
+            >
+              Descargar
+            </button>
+            <button
+              type="button"
+              onClick={openShareDialog}
+              disabled={!capturedImage || isSharing}
+              className="rounded-lg border border-[#fbbc04] bg-white/70 px-3 py-2.5 text-xs font-black uppercase tracking-[0.12em] text-[#5f4500] transition hover:bg-[#fbbc04] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white/70"
+            >
+              {isSharing ? "Enviando..." : "Enviar al muro"}
+            </button>
+          </div>
+          {cooldownRemainingSeconds > 0 && (
+            <p className="text-xs font-medium text-[#5f6368]">
+              Límite activo: podrás generar otra imagen en {cooldownRemainingSeconds}s.
+            </p>
+          )}
+          {cameraReady && (
+            <p className="text-xs font-medium text-[#5f6368]">
+              La cámara se apaga tras 2 minutos sin actividad o al dejar la página en segundo plano.
+            </p>
+          )}
         </div>
       </section>
       <footer className="relative z-10 border-t border-[#dadce0] bg-white/75 px-5 py-5 text-center font-mono text-xs leading-6 text-[#5f6368] backdrop-blur sm:text-sm">
